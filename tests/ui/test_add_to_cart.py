@@ -1,38 +1,25 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 from utils.driver_setup import get_driver
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
 
 
 def test_add_product_to_cart():
+
     driver = get_driver()
-    wait = WebDriverWait(driver, 10)
 
     try:
-        #Login
-        driver.get("https://www.saucedemo.com/")
 
-        wait.until(EC.presence_of_element_located((By.ID, "user-name"))).send_keys("standard_user")
-        driver.find_element(By.ID, "password").send_keys("secret_sauce")
-        driver.find_element(By.ID, "login-button").click()
+        login = LoginPage(driver)
+        inventory = InventoryPage(driver)
 
-        wait.until(EC.url_contains("inventory.html"))
+        login.open()
+        login.login("standard_user", "secret_sauce")
 
-        #Agregar producto
-        add_button = wait.until(
-            EC.element_to_be_clickable((By.ID, "add-to-cart-sauce-labs-backpack"))
-        )
-        add_button.click()
+        inventory.add_first_product_to_cart()
 
-        #Validar carrito
-        cart_badge = wait.until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "shopping_cart_badge"))
-        )
+        assert inventory.get_cart_badge() == "1"
 
-        assert cart_badge.text == "1"
-
-        print("✅ Producto agregado correctamente")
+        print("Producto agregado correctamente al carrito.")
 
     finally:
         driver.quit()

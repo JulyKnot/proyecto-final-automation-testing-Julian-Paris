@@ -8,6 +8,7 @@ def test_inventory_page():
     driver = get_driver()
 
     try:
+
         login = LoginPage(driver)
         inventory = InventoryPage(driver)
 
@@ -17,13 +18,13 @@ def test_inventory_page():
         assert inventory.get_title() == "Products"
         assert len(inventory.get_products()) > 0
 
-        print(f"Producto: {inventory.get_first_product_name()}")
+        print(f"Primer producto: {inventory.get_first_product_name()}")
         print(f"Precio: {inventory.get_first_product_price()}")
 
         assert inventory.is_menu_displayed()
         assert inventory.is_filter_displayed()
 
-        print("Inventario validado correctamente")
+        print("Inventario validado correctamente.")
 
     finally:
         driver.quit()
